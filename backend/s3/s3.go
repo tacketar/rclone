@@ -2566,13 +2566,13 @@ knows about - please make a bug report if not.
 const (
 	metaMtime   = "mtime"     // the meta key to store mtime in - e.g. X-Amz-Meta-Mtime
 	metaMD5Hash = "md5chksum" // the meta key to store md5hash in
-	// The maximum size of object we can COPY - this should be 5 GiB but is < 5 GB for b2 compatibility
+	// The maximum size of object we can COPY - For our LFS+Minio we set this to 5TiB
 	// See https://forum.rclone.org/t/copying-files-within-a-b2-bucket/16680/76
 	maxSizeForCopy      = 4768 * 1024 * 1024
 	maxUploadParts      = 10000 // maximum allowed number of parts in a multi-part upload
 	minChunkSize        = fs.SizeSuffix(1024 * 1024 * 5)
-	defaultUploadCutoff = fs.SizeSuffix(200 * 1024 * 1024)
-	maxUploadCutoff     = fs.SizeSuffix(5 * 1024 * 1024 * 1024)
+	defaultUploadCutoff = fs.SizeSuffix(5 * 1024 * 1024 * 1024 * 1024)
+	maxUploadCutoff     = fs.SizeSuffix(5 * 1024 * 1024 * 1024 * 1024)
 	minSleep            = 10 * time.Millisecond           // In case of error, start at 10ms sleep.
 	maxExpireDuration   = fs.Duration(7 * 24 * time.Hour) // max expiry is 1 week
 )
@@ -3175,6 +3175,7 @@ func setQuirks(opt *Options) {
 		useAlreadyExists = false // untested
 	case "Minio":
 		virtualHostStyle = false
+	        useMultipartUploads   = false
 	case "Netease":
 		listObjectsV2 = false // untested
 		urlEncodeListings = false
